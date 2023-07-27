@@ -17,8 +17,8 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 face_detector,face_recognizer = load_models()
 
 
-
 st.header("Database Downloader")
+st.write("TYPE : ", st.secrets["TYPE"])
 year = st.selectbox('Pick year', ['2025', '2024','2023','2026'])
 
 if year == '2025':
