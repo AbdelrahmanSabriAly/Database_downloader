@@ -7,6 +7,29 @@ import cv2
 import streamlit as st
 import gdown
 from tqdm import tqdm
+import json
+import base64
+from dotenv import load_dotenv, find_dotenv
+
+
+load_dotenv()
+
+def create_keyfile_dict():
+    variables_keys = {
+        "type": os.getenv("TYPE"),
+        "project_id": os.getenv("PROJECT_ID"),
+        "private_key_id": os.getenv("PRIVATE_KEY_ID"),
+        "private_key": os.getenv("PRIVATE_KEY"),
+        "client_email": os.getenv("CLIENT_EMAIL"),
+        "client_id": os.getenv("CLIENT_ID"),
+        "auth_uri": os.getenv("AUTH_URI"),
+        "token_uri": os.getenv("TOKEN_URI"),
+        "auth_provider_x509_cert_url": os.getenv("AUTH_PROVIDER_X509_CERT_URL"),
+        "client_x509_cert_url": os.getenv("CLIENT_X509_CERT_URL")
+    }
+    return variables_keys
+
+
 
 dictionary = {}
 dirname = ""
@@ -74,14 +97,13 @@ def load_forms_responses(face_detector, face_recognizer,temp):
 
     student_data = []
     # Replace the following with your actual JSON credentials file path and sheet name
-    json_credentials_file = "required_files/attendance-monitoring-393.json"
+    #json_credentials_file = "required_files/attendance-monitoring-393.json"
     sheet_name = "Attendance monitoring (Responses)"
 
     # Authorize with Google Sheets API using credentials
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    creds = ServiceAccountCredentials.from_json_keyfile_name(json_credentials_file, scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(create_keyfile_dict(), scope)
     client = gspread.authorize(creds)
-
     # Open the Google Sheet by its name
     sheet = client.open(sheet_name).sheet1
     sheet = find_and_remove_duplicates(sheet)
