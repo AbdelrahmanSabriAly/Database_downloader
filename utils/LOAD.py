@@ -69,9 +69,6 @@ def recognize_face(image, face_detector, face_recognizer, file_name=None):
         return None, None
 
 
-
-
-
 def load_models():
     # Init models face detection & recognition
     weights = "required_files/face_detection_yunet_2023mar_int8.onnx"
@@ -83,7 +80,6 @@ def load_models():
     return face_detector,face_recognizer
 
 
-      
 
 def load_forms_responses(face_detector, face_recognizer,temp):
 
