@@ -7,12 +7,7 @@ import cv2
 import streamlit as st
 import gdown
 from tqdm import tqdm
-import json
-import base64
-from dotenv import load_dotenv, find_dotenv
 
-
-load_dotenv()
 
 def create_keyfile_dict():
     variables_keys = {
