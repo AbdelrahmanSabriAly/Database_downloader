@@ -8,7 +8,7 @@ import streamlit as st
 import gdown
 from tqdm import tqdm
 
-
+@st.cache_resource
 def create_keyfile_dict():
     variables_keys = {
         "type": st.secrets["TYPE"],
