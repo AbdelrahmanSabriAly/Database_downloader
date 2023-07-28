@@ -7,8 +7,7 @@ import cv2
 import streamlit as st
 import gdown
 from tqdm import tqdm
-import requests
-import imghdr
+import re
 
 @st.cache_resource
 def create_keyfile_dict():
@@ -81,6 +80,20 @@ def load_models():
     face_recognizer = cv2.FaceRecognizerSF_create(weights, "")
     return face_detector,face_recognizer
 
+def download_image_from_drive(file_id, output_dir):
+    url = f'https://drive.google.com/uc?id={file_id}'
+    output_path = os.listdir(output_dir)[0]
+    gdown.download(url, output_path, quiet=False)
+    return output_path
+
+def extract_file_id(link):
+    pattern = r'(?<=id=)([\w-]+)'
+    match = re.search(pattern, link)
+    if match:
+        return match.group(1)
+    else:
+        return None
+
 
 
 def load_forms_responses(face_detector, face_recognizer,temp,year):
@@ -111,52 +124,32 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     my_bar = st.progress(0.0, text="Processing ...")
     added_value = 1.0/num_rows
     counter = 0
-    extensions = ['.jpg','.jpeg','.png']
     # Process the data
     for row in tqdm(data):
         timestamp = row['Timestamp']
         id = row['ID']
         name_in_arabic = row['Name in Arabic']
-        image_url = row['Image']
+        image_url = row['Images']
         image_url = image_url.replace("open","uc")
-        image = None
 
-        
-        # Generate the appropriate output file name based on the file extension
-        for file_extension in extensions:
-            output = f"{id}{file_extension}"
+        # Generate the appropriate output file name based on the file extension    
+        file_id = extract_file_id(image_url)    
+        output_dir = 'IMAGES'
+        output = download_image_from_drive(file_id, output_dir)
+        image = cv2.imread(output)
+        # Process the image using face recognition functions
+        feats, faces = recognize_face(image, face_detector, face_recognizer)
 
-            gdown.download(image_url,output,quiet=False)
-            # Check if the image file was downloaded successfully
-            if os.path.isfile(output):
-                # Determine the image file type
-                image_type = imghdr.what(output)
+        if faces is None:
+            continue
 
-                # Check if the image type matches any of the expected extensions
-                if image_type in extensions:
-                    # Read the image with cv2 if it has the correct extension
-                    image = cv2.imread(output)
-                    break  # Break the loop since we found the correct extension
-                else:
-                    # Delete the downloaded file as it has the wrong extension
-                    os.remove(output)
-            else:
-                print(f"Error: Unable to download the image from {image_url}")
+        # Extract user_id from the uploaded file's name
+        dictionary[id] = feats[0]
+        student_data.append({"Name": name_in_arabic, "ID": id})
 
-            # Process the image using face recognition functions
-            if image is not None:
-                feats, faces = recognize_face(image, face_detector, face_recognizer)
-
-                if faces is None:
-                    continue
-
-                # Extract user_id from the uploaded file's name
-                dictionary[id] = feats[0]
-                student_data.append({"Name": name_in_arabic, "ID": id})
-
-                os.remove(output)
-                counter+=added_value
-                my_bar.progress(counter, text="Processing ...")
+        os.remove(output)
+        counter+=added_value
+        my_bar.progress(counter, text="Processing ...")
     st.success(f'There are {len(dictionary)} students')
     my_bar.progress(1.0, text="Done")
         
