@@ -119,19 +119,29 @@ def load_forms_responses(face_detector, face_recognizer,temp):
         image_url = row['Image']
         image_url = image_url.replace("open","uc")
 
-        # Make an HTTP request to get the Content-Type header
-        response = requests.head(image_url)
 
-        # Extract the file extension from the Content-Type header
-        content_type = response.headers.get('Content-Type')
-        file_extension = "." + imghdr.what(None, response.content)
-
+        extensions = ['.jpg','.jpeg','.png']
         # Generate the appropriate output file name based on the file extension
-        output = f"{id}{file_extension}"
+        for file_extension in extensions:
+            output = f"{id}{file_extension}"
 
-        gdown.download(image_url,output,quiet=False)
+            gdown.download(image_url,output,quiet=False)
+            # Check if the image file was downloaded successfully
+            if os.path.isfile(output):
+                # Determine the image file type
+                image_type = imghdr.what(output)
 
-        image = cv2.imread(output)
+                # Check if the image type matches any of the expected extensions
+                if image_type in extensions:
+                    # Read the image with cv2 if it has the correct extension
+                    image = cv2.imread(output)
+                    break  # Break the loop since we found the correct extension
+                else:
+                    # Delete the downloaded file as it has the wrong extension
+                    os.remove(output)
+            else:
+                print(f"Error: Unable to download the image from {image_url}")
+
         # Process the image using face recognition functions
         feats, faces = recognize_face(image, face_detector, face_recognizer)
 
