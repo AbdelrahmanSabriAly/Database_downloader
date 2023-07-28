@@ -124,6 +124,8 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     my_bar = st.progress(0.0, text="Processing ...")
     added_value = 1.0/num_rows
     counter = 0
+    output_dir = 'IMAGES'
+    os.makedirs(output_dir)
     # Process the data
     for row in tqdm(data):
         timestamp = row['Timestamp']
@@ -134,8 +136,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
 
         # Generate the appropriate output file name based on the file extension    
         file_id = extract_file_id(image_url)    
-        output_dir = 'IMAGES'
-        os.makedirs(output_dir)
+
         output = download_image_from_drive(file_id, output_dir)
         image = cv2.imread(output)
         # Process the image using face recognition functions
