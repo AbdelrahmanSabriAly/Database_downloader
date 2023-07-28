@@ -7,6 +7,8 @@ import cv2
 import streamlit as st
 import gdown
 from tqdm import tqdm
+import requests
+import imghdr
 
 @st.cache_resource
 def create_keyfile_dict():
@@ -117,15 +119,16 @@ def load_forms_responses(face_detector, face_recognizer,temp):
         image_url = row['Image']
         image_url = image_url.replace("open","uc")
 
-        # # Get the file extension from the image URL
-        # _, ext = os.path.splitext(image_url)
+        # Make an HTTP request to get the Content-Type header
+        response = requests.head(image_url)
 
-        # # Decide the output filename based on the file extension
-        # if ext.lower() in [".jpg", ".jpeg", ".png"]:
-        output = f"{id}.jpeg"
-        # else:
-        #     print("Unsupported image format:", ext)
-        #     continue
+        # Extract the file extension from the Content-Type header
+        content_type = response.headers.get('Content-Type')
+        file_extension = "." + imghdr.what(None, response.content)
+
+        # Generate the appropriate output file name based on the file extension
+        output = f"{id}{file_extension}"
+
         gdown.download(image_url,output,quiet=False)
 
         image = cv2.imread(output)
