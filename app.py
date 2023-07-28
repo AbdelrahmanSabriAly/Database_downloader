@@ -22,7 +22,7 @@ year = st.selectbox('Pick year', ['2025', '2024','2023','2026'])
 
 if year == '2025':
     temp = st.empty()
-    temp.button("Load",on_click=load_forms_responses,args=(face_detector, face_recognizer,temp))
+    temp.button("Load",on_click=load_forms_responses,args=(face_detector, face_recognizer,temp,year))
 
 else:
     st.warning("Comming soon")

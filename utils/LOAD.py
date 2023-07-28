@@ -83,9 +83,9 @@ def load_models():
 
 
 
-def load_forms_responses(face_detector, face_recognizer,temp):
+def load_forms_responses(face_detector, face_recognizer,temp,year):
 
-    file_name = "data.pkl"
+    file_name = f"{year}_data.pkl"
     if os.path.exists(file_name):
         os.remove(file_name)
 
@@ -118,7 +118,7 @@ def load_forms_responses(face_detector, face_recognizer,temp):
         name_in_arabic = row['Name in Arabic']
         image_url = row['Image']
         image_url = image_url.replace("open","uc")
-
+        image = None
 
         extensions = ['.jpg','.jpeg','.png']
         # Generate the appropriate output file name based on the file extension
@@ -143,38 +143,39 @@ def load_forms_responses(face_detector, face_recognizer,temp):
                 print(f"Error: Unable to download the image from {image_url}")
 
         # Process the image using face recognition functions
-        feats, faces = recognize_face(image, face_detector, face_recognizer)
+        if image is not None:
+            feats, faces = recognize_face(image, face_detector, face_recognizer)
 
-        if faces is None:
-            continue
+            if faces is None:
+                continue
 
-        # Extract user_id from the uploaded file's name
-        dictionary[id] = feats[0]
-        student_data.append({"Name": name_in_arabic, "ID": id})
+            # Extract user_id from the uploaded file's name
+            dictionary[id] = feats[0]
+            student_data.append({"Name": name_in_arabic, "ID": id})
 
-        os.remove(output)
-        counter+=added_value
-        my_bar.progress(counter, text="Processing ...")
-    st.success(f'There are {len(dictionary)} students')
-    my_bar.progress(1.0, text="Done")
-    
-    
-    temp.empty()
-    df = pd.DataFrame(student_data)
-    
-    with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
-        pickle.dump(dictionary, file)
+            os.remove(output)
+            counter+=added_value
+            my_bar.progress(counter, text="Processing ...")
+        st.success(f'There are {len(dictionary)} students')
+        my_bar.progress(1.0, text="Done")
+        
+        
+        temp.empty()
+        df = pd.DataFrame(student_data)
+        
+        with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
+            pickle.dump(dictionary, file)
 
 
-    st.download_button(
-            label="Click here to download",
-            data=open(file_name, "rb").read(),
-            file_name=file_name,
-            mime="application/octet-stream",
-        )
+        st.download_button(
+                label="Click here to download",
+                data=open(file_name, "rb").read(),
+                file_name=file_name,
+                mime="application/octet-stream",
+            )
 
-    df = pd.DataFrame(student_data)
-    st.table(df)
+        df = pd.DataFrame(student_data)
+        st.table(df)
 
 
 
