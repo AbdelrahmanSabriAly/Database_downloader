@@ -7,9 +7,7 @@ import cv2
 import streamlit as st
 import gdown
 from tqdm import tqdm
-import re
 
-@st.cache_resource
 def create_keyfile_dict():
     variables_keys = {
         "type": st.secrets["TYPE"],
@@ -95,8 +93,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         os.remove(file_name)
 
     student_data = []
-    # Replace the following with your actual JSON credentials file path and sheet name
-    #json_credentials_file = "required_files/attendance-monitoring-393.json"
+
     sheet_name = "Attendance monitoring (Responses)"
 
     # Authorize with Google Sheets API using credentials
@@ -140,6 +137,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         os.remove(output)
         counter+=added_value
         my_bar.progress(counter, text="Processing ...")
+        
     st.success(f'There are {len(dictionary)} students')
     my_bar.progress(1.0, text="Done")
         
