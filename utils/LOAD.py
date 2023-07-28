@@ -80,20 +80,11 @@ def load_models():
     face_recognizer = cv2.FaceRecognizerSF_create(weights, "")
     return face_detector,face_recognizer
 
-def download_image_from_drive(file_id, output_dir):
-    url = f'https://drive.google.com/uc?id={file_id}'
+def download_image_from_drive(url, output_dir):
     output_path = os.path.join(output_dir, '')
     gdown.download(url, output_path, quiet=False)
-    output = os.listdir(output_dir)[0]
+    output =os.path.join(output_dir, os.listdir(output_dir)[0])
     return output
-
-def extract_file_id(link):
-    pattern = r'(?<=id=)([\w-]+)'
-    match = re.search(pattern, link)
-    if match:
-        return match.group(1)
-    else:
-        return None
 
 
 
@@ -126,7 +117,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     added_value = 1.0/num_rows
     counter = 0
     output_dir = 'IMAGES'
-    os.makedirs(output_dir)
     # Process the data
     for row in tqdm(data):
         timestamp = row['Timestamp']
@@ -135,10 +125,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         image_url = row['Image']
         image_url = image_url.replace("open","uc")
 
-        # Generate the appropriate output file name based on the file extension    
-        file_id = extract_file_id(image_url)    
-
-        output = download_image_from_drive(file_id, output_dir)
+        output = download_image_from_drive(image_url, output_dir)
         image = cv2.imread(output)
         # Process the image using face recognition functions
         feats, faces = recognize_face(image, face_detector, face_recognizer)
