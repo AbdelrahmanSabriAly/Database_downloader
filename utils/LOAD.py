@@ -82,9 +82,10 @@ def load_models():
 
 def download_image_from_drive(file_id, output_dir):
     url = f'https://drive.google.com/uc?id={file_id}'
-    output_path = os.listdir(output_dir)[0]
+    output_path = os.path.join(output_dir, '')
     gdown.download(url, output_path, quiet=False)
-    return output_path
+    output = os.listdir(output_dir)[0]
+    return output
 
 def extract_file_id(link):
     pattern = r'(?<=id=)([\w-]+)'
