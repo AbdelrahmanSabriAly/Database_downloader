@@ -157,15 +157,15 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
                 os.remove(output)
                 counter+=added_value
                 my_bar.progress(counter, text="Processing ...")
-        st.success(f'There are {len(dictionary)} students')
-        my_bar.progress(1.0, text="Done")
+    st.success(f'There are {len(dictionary)} students')
+    my_bar.progress(1.0, text="Done")
         
         
-        temp.empty()
-        df = pd.DataFrame(student_data)
-        
-        with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
-            pickle.dump(dictionary, file)
+    temp.empty()
+    df = pd.DataFrame(student_data)
+    
+    with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
+        pickle.dump(dictionary, file)
 
 
     st.download_button(
