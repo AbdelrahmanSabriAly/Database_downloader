@@ -129,7 +129,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         timestamp = row['Timestamp']
         id = row['ID']
         name_in_arabic = row['Name in Arabic']
-        image_url = row['Images']
+        image_url = row['Image']
         image_url = image_url.replace("open","uc")
 
         # Generate the appropriate output file name based on the file extension    
