@@ -26,7 +26,8 @@ def create_keyfile_dict():
 
 
 
-dictionary = {}
+face_dict = {}
+mac_dict = {}
 dirname = ""
 
 # Google Sheet details
@@ -132,21 +133,22 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
             continue
 
         # Extract user_id from the uploaded file's name
-        dictionary[id] = feats[0]
+        face_dict[id] = feats[0]
+        mac_dict[id] = mac
         student_data.append({"Name": name_in_arabic, "ID": id})
 
         os.remove(output)
         counter+=added_value
         my_bar.progress(counter, text="Processing ...")
         
-    st.success(f'There are {len(dictionary)} students')
+    st.success(f'There are {len(face_dict)} students')
     my_bar.progress(1.0, text="Done")
         
         
     temp.empty()
     df = pd.DataFrame(student_data)
     
-    pickled_list = [dictionary,mac]
+    pickled_list = [face_dict,mac_dict]
     with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
         pickle.dump(pickled_list, file)
 
