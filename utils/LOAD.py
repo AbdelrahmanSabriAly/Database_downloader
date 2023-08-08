@@ -117,6 +117,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     # Process the data
     for row in tqdm(data):
         timestamp = row['Timestamp']
+        mac = row['MAC Addresses']
         id = row['ID']
         name_in_arabic = row['Name in Arabic']
         image_url = row['Image']
@@ -145,8 +146,9 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     temp.empty()
     df = pd.DataFrame(student_data)
     
+    pickled_list = [dictionary,mac]
     with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
-        pickle.dump(dictionary, file)
+        pickle.dump(pickled_list, file)
 
 
     st.download_button(
