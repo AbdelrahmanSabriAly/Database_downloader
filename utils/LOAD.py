@@ -7,6 +7,8 @@ import cv2
 import streamlit as st
 import gdown
 from tqdm import tqdm
+from openpyxl import load_workbook
+
 
 def create_keyfile_dict():
     variables_keys = {
@@ -85,6 +87,24 @@ def download_image_from_drive(url, output_dir):
     output =os.path.join(output_dir, os.listdir(output_dir)[0])
     return output
 
+def get_pickled_excel():
+    # Load the Excel file
+    excel_file_path = "utils\\2025.xlsx"
+    workbook = load_workbook(excel_file_path)
+
+    # Assuming you want to work with the first sheet
+    sheet = workbook.active
+
+    # Process your Excel data (read/write as needed)
+    data_to_pickle = []
+
+    for row in sheet.iter_rows(values_only=True):
+        data_to_pickle.append(row)
+
+    # Close the workbook
+    workbook.close()
+
+    return data_to_pickle
 
 
 def load_forms_responses(face_detector, face_recognizer,temp,year):
@@ -92,6 +112,8 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     file_name = f"{year}_data.pkl"
     if os.path.exists(file_name):
         os.remove(file_name)
+
+    eece_2025 = get_pickled_excel() 
 
     student_data = []
 
@@ -148,7 +170,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     temp.empty()
     df = pd.DataFrame(student_data)
     
-    pickled_list = [face_dict,mac_dict]
+    pickled_list = [face_dict,mac_dict,eece_2025]
     with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
         pickle.dump(pickled_list, file)
 

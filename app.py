@@ -1,5 +1,6 @@
 import streamlit as st
 from utils.LOAD import load_models,load_forms_responses
+from PIL import Image
 
 
 # CSS style to hide Streamlit's main menu and footer
@@ -11,11 +12,12 @@ footer {visibility: hidden;}
 """
 
 # Applying the CSS style to hide Streamlit's main menu and footer
-st.markdown(hide_st_style, unsafe_allow_html=True)
+# st.markdown(hide_st_style, unsafe_allow_html=True)
 
 l,m,r = st.columns(3)
+image = Image.open('g302.png')
 
-m.image('logo.png')
+m.image(image, caption='Reach The Futue')
 
 face_detector,face_recognizer = load_models()
 
