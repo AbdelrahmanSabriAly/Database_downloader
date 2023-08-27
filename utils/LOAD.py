@@ -93,7 +93,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         os.remove(file_name)
 
 
-    student_data = []
 
     sheet_name = "Attendance monitoring (Responses)"
 
@@ -117,9 +116,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     output_dir = 'IMAGES'
     # Process the data
     for row in tqdm(data):
-        timestamp = row['Timestamp']
         id = row['ID']
-        name_in_arabic = row['Name in Arabic']
         image_url = row['Image']
         image_url = image_url.replace("open","uc")
 
@@ -133,7 +130,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
 
         # Extract user_id from the uploaded file's name
         face_dict[id] = feats[0]
-        student_data.append({"Name": name_in_arabic, "ID": id})
 
         os.remove(output)
         counter+=added_value
@@ -144,7 +140,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         
         
     temp.empty()
-    df = pd.DataFrame(student_data)
     
     
     with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
@@ -158,8 +153,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
             mime="application/octet-stream",
         )
 
-    df = pd.DataFrame(student_data)
-    st.table(df)
 
 
 
