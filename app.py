@@ -14,10 +14,10 @@ footer {visibility: hidden;}
 # Applying the CSS style to hide Streamlit's main menu and footer
 # st.markdown(hide_st_style, unsafe_allow_html=True)
 
-l,m,r = st.columns(3)
+# l,m,r = st.columns(3)
 image = Image.open('g302.png')
 
-m.image(image, caption='Reach The Futue')
+st.sidebar.image(image, caption='Reach The Futue')
 
 face_detector,face_recognizer = load_models()
 
