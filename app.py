@@ -12,7 +12,7 @@ footer {visibility: hidden;}
 """
 
 # Applying the CSS style to hide Streamlit's main menu and footer
-# st.markdown(hide_st_style, unsafe_allow_html=True)
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # l,m,r = st.columns(3)
 image = Image.open('g302-removebg-preview.png')
