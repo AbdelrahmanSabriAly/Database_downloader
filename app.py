@@ -15,7 +15,7 @@ footer {visibility: hidden;}
 # st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # l,m,r = st.columns(3)
-image = Image.open('g302.png')
+image = Image.open('g302-removebg-preview.png')
 
 st.sidebar.image(image, caption='Reach The Futue')
 
