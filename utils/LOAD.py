@@ -28,7 +28,6 @@ def create_keyfile_dict():
 
 
 face_dict = {}
-mac_dict = {}
 dirname = ""
 
 # Google Sheet details
@@ -119,7 +118,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     # Process the data
     for row in tqdm(data):
         timestamp = row['Timestamp']
-        mac = row['MAC Addresses']
         id = row['ID']
         name_in_arabic = row['Name in Arabic']
         image_url = row['Image']
@@ -135,7 +133,6 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
 
         # Extract user_id from the uploaded file's name
         face_dict[id] = feats[0]
-        mac_dict[id] = mac
         student_data.append({"Name": name_in_arabic, "ID": id})
 
         os.remove(output)
@@ -149,9 +146,9 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     temp.empty()
     df = pd.DataFrame(student_data)
     
-    pickled_list = [face_dict,mac_dict]
+    
     with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
-        pickle.dump(pickled_list, file)
+        pickle.dump(face_dict, file)
 
 
     st.download_button(
