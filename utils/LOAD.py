@@ -139,7 +139,9 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         os.remove(output)
         counter+=added_value
         my_bar.progress(counter, text="Processing ...")
-    st.info(mac_dict)
+
+    database_list = [face_dict,mac_dict]
+    st.info(database_list[1])
     st.success(f'There are {len(face_dict)} students')
     my_bar.progress(1.0, text="Done")
         
@@ -147,7 +149,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
     temp.empty()
     
     
-    database_list = [face_dict,mac_dict]
+    
     with open(file_name, "wb") as file:  # Use 'wb' mode for writing binary data
         pickle.dump(database_list, file)
 
