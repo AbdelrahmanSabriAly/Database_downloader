@@ -139,7 +139,7 @@ def load_forms_responses(face_detector, face_recognizer,temp,year):
         os.remove(output)
         counter+=added_value
         my_bar.progress(counter, text="Processing ...")
-        
+    st.info(mac_dict)
     st.success(f'There are {len(face_dict)} students')
     my_bar.progress(1.0, text="Done")
         
